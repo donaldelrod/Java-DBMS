@@ -1,128 +1,23 @@
-/**
- * Define a grammar called pa2
- */
-
-////////////////////////Parser Rules/////////////////////////
 grammar pa2;
 
-attributeList
-	: ATTRIBUTENAME+;
-	
-condition
-	: conjunction+ ;
-	
-conjunction
-	: comparison+ ;
-comparison
-	: OPERAND OPERATION OPERAND ;//| (condition);
-	
-selection
-	: SELECT (condition) atomicExpr ;
-	
-projection
-	: PROJECT (attributeList) atomicExpr ;
 
-atomicExpr
-	: RELATIONNAME ;// | (expr) ;
-	
-renaming
-	: RENAME (attributeList) atomicExpr ;
-
-expr
-	: atomicExpr | selection | projection | renaming | union | difference | product ;
-	
-union 
-	: atomicExpr PLUS atomicExpr ;
-
-difference
-	: atomicExpr MINUS atomicExpr ;
-	
-product 
-	:  atomicExpr PRODUCT atomicExpr ;
-	
-integer
-	: DIGIT+ ;
-	
-query
-	: RELATIONNAME LARROW expr ;
-	
-openCMD
-	: OPEN RELATIONNAME ;
-	
-closeCMD
-	: CLOSE RELATIONNAME ;
-
-writeCMD
-	: WRITE RELATIONNAME ;
-	
-exitCMD
-	: EXIT ;
-	
-showCMD
-	: SHOW atomicExpr ;
-	
-createCMD
-	: CREATE TABLE RELATIONNAME LPAR TYPEDATTRIBUTELIST RPAR PRIMARY KEY LPAR attributeList RPAR;
-	
-updateCMD
-	: UPDATE RELATIONNAME SET (ATTRIBUTENAME EQUAL LITERAL)+ WHERE condition ;
-	
-insertCMD
-	: INSERT INTO RELATIONNAME VALUES FROM LPAR LITERAL+ RPAR | INSERT INTO RELATIONNAME VALUES FROM RELATION expr ;
-	
-deleteCMD
-	: DELETE FROM RELATIONNAME WHERE condition ;
-	
-command
-	: openCMD | closeCMD | writeCMD | showCMD | exitCMD | createCMD | updateCMD | insertCMD | deleteCMD ;
-	
-program
-	: (query | command)* ;
-
-
-///////////////////////Lexer Rules///////////////////////////
-//skip spaces, tabs, newlines
 WS 
-	: [ \t\r\n]+ -> skip ; 
+	: ('\t' | '\r' | '\n' | ' ')+ -> skip ; 
 
-
-fragment OPERAND
-	: ATTRIBUTENAME | LITERAL ;
-
-//alphabet
 fragment ALPHA
 	: ('a' .. 'z') | ('A' .. 'Z') | '_' ;
 
-//numbers
-fragment DIGIT
-	: ('0' .. '9') ;
-
-fragment IDENTIFIER 
-	: ALPHA | (ALPHA | DIGIT)* ;
-
-
-fragment OPERATION
-	: '==' | '!=' | '>' | '<' | '<=' | '>=';
-
-
-
-fragment ATTRIBUTENAME
-	: IDENTIFIER ;
+DIGIT
+	: ('0' ..'9') ;
 	
-fragment RELATIONNAME
-	: IDENTIFIER ;
-
-fragment LITERAL 
-	: DIGIT;
-
 SELECT 
-	: 'select' ;
+	: 'SELECT' | 'select' ;
 
 PROJECT
-	: 'project' ;
+	: 'PROJECT' | 'project';
 	
 RENAME
-	: 'rename' ;
+	: 'RENAME' | 'rename';
 
 PLUS
 	: '+' ;
@@ -135,9 +30,21 @@ PRODUCT
 	
 EQUAL
 	: '=' ;
-
+	
 LARROW
 	: '<-' ;
+	
+COMMA
+	: ',' ;
+	
+SEMICOLON
+	: ';' ;
+	
+DOUBLEAND
+	: '&&' ;
+	
+DOUBLEOR
+	: '||' ;
 	
 OPEN
 	: 'OPEN' ;
@@ -177,37 +84,22 @@ SET
 
 WHERE
 	: 'WHERE' ;
+	
+INTEGER
+	: 'INTEGER' ;
 
 VARCHAR
 	: 'VARCHAR' ;
 
-INTEGER
-	: 'INTEGER' ;
-
-CHAR
+/*CHAR
 	: 'CHAR' ;
 	
-DATE
+DATET
 	: 'DATE' ;
 	
-TIME
+TIMET
 	: 'TIME' ;
-	
-LPAR
-	: '(' ;
-	
-RPAR
-	: ')' ;
-	
-TYPE
-	: VARCHAR LPAR DIGIT+ RPAR | INTEGER | DATE | TIME | CHAR LPAR DIGIT+ RPAR ;
-	
-fragment TYPEDATTRIBUTE
-	: ATTRIBUTENAME TYPE ;
-	
-TYPEDATTRIBUTELIST
-	: TYPEDATTRIBUTE+ ;
-	
+*/
 RELATION
 	: 'RELATION' ;
 	
@@ -221,7 +113,127 @@ DELETE
 	: 'DELETE' ;
 	
 VALUES
-	: ' VALUES' ;
+	: 'VALUES' ;
 
 FROM
 	: 'FROM' ;
+	
+LPAR
+	: '(' ;
+	
+RPAR
+	: ')' ;
+	
+OPERATION
+	: '==' | '!=' | '>' | '<' | '<=' | '>=';
+
+LITERAL
+	: '"' ;
+	
+IDENTIFIER
+	: ALPHA (ALPHA | DIGIT)* ;
+	
+TYPE
+	: INTEGER | (VARCHAR LPAR DIGIT+ RPAR) ;// | DATET | TIMET | (CHAR LPAR DIGIT+ RPAR) );
+	
+typedAttributeList //TYPEDATTRIBUTELIST
+	: IDENTIFIER TYPE (COMMA IDENTIFIER TYPE)* ;
+	
+OPERAND
+	: DIGIT | IDENTIFIER ;
+		
+integer
+	: DIGIT DIGIT* ; 
+	
+attributeList
+	: IDENTIFIER (COMMA IDENTIFIER)* ;
+	
+openCMD
+	: OPEN IDENTIFIER ;
+	
+closeCMD
+	: CLOSE IDENTIFIER ;
+
+showCMD
+	: SHOW atomicExpr ;	
+
+writeCMD
+	: WRITE IDENTIFIER ;
+	
+deleteCMD
+	: DELETE FROM IDENTIFIER WHERE condition ;
+		
+exitCMD
+	: EXIT ;
+	
+condition
+	: conjunction (DOUBLEOR conjunction)* ;
+	
+conjunction
+	: comparison (DOUBLEAND comparison)* ;
+	
+comparison
+	: OPERAND OPERATION OPERAND | (LPAR condition RPAR);
+
+selection
+	: SELECT LPAR condition RPAR atomicExpr ;
+	
+projection
+	: PROJECT LPAR attributeList RPAR atomicExpr ;
+
+atomicExpr
+	: IDENTIFIER  | (LPAR expr RPAR) ;
+	
+renaming
+	: RENAME LPAR attributeList RPAR atomicExpr ;
+	
+union 
+	: atomicExpr PLUS atomicExpr ;
+
+difference
+	: atomicExpr MINUS atomicExpr ;
+	
+product 
+	:  atomicExpr PRODUCT atomicExpr ;	
+
+expr
+	: atomicExpr | selection | projection | renaming | union | difference | product ;
+
+ 
+insertCMD
+	: (INSERT INTO IDENTIFIER VALUES FROM LPAR  (integer | (LITERAL IDENTIFIER LITERAL)) (COMMA (DIGIT+ | (LITERAL IDENTIFIER LITERAL) ) )*  RPAR)
+	| (INSERT INTO IDENTIFIER VALUES FROM RELATION expr) ;
+
+
+query
+	: IDENTIFIER LARROW expr SEMICOLON;
+	
+UPDATEFRAG
+	: IDENTIFIER EQUAL DIGIT ;
+	
+//TYPE
+//	: (VARCHAR LPAR DIGIT+ RPAR) | INTEGERT | DATET | TIMET | (CHAR LPAR DIGIT+ RPAR) ;
+//	
+//fragment TYPEDATTRIBUTE
+//	: IDENTIFIER TYPE ;
+//	
+//TYPEDATTRIBUTELIST
+//	: TYPEDATTRIBUTE (COMMA TYPEDATTRIBUTE)* ;
+
+createCMD
+	: CREATE TABLE IDENTIFIER LPAR typedAttributeList RPAR PRIMARY KEY LPAR attributeList RPAR;
+	
+updateCMD
+	: UPDATE IDENTIFIER SET UPDATEFRAG (COMMA UPDATEFRAG)* WHERE condition ;
+
+command
+	: (openCMD | closeCMD | writeCMD | showCMD | exitCMD | createCMD | updateCMD | insertCMD | deleteCMD ) SEMICOLON;
+	
+program
+	: (query | command) ;		
+
+
+	
+	
+	
+	
