@@ -1,31 +1,31 @@
-(program (command (createCMD CREATE TABLE animals ( (typedAttributeList name VARCHAR(20) , kind VARCHAR(8) , years INTEGER) ) PRIMARY KEY ( (attributeList name , kind) )) ;))
-1
-(program (command (insertCMD INSERT INTO animals VALUES FROM ( " Joe " , " cat " , 4 )) ;))
+(program (command (createCMD CREATE TABLE animals ( (typedAttributeList name (type VARCHAR ( 2 0 )) , kind (type VARCHAR ( 8 )) , years (type INTEGER)) ) PRIMARY KEY ( (attributeList name , kind) )) ;))
 0
-(program (command (insertCMD INSERT INTO animals VALUES FROM ( " Spot " , " dog " , 1 0 )) ;))
+(program (command (insertCMD INSERT INTO animals VALUES FROM ( "Joe" , "cat" , 4 )) ;))
 0
-(program (command (insertCMD INSERT INTO animals VALUES FROM ( " Snoopy " , " dog " , 3 )) ;))
+(program (command (insertCMD INSERT INTO animals VALUES FROM ( "Spot" , "dog" , 1 0 )) ;))
 0
-(program (command (insertCMD INSERT INTO animals VALUES FROM ( " Tweety " , " bird " , 1 )) ;))
+(program (command (insertCMD INSERT INTO animals VALUES FROM ( "Snoopy" , "dog" , 3 )) ;))
 0
-(program (command (insertCMD INSERT INTO animals VALUES FROM ( " Joe " , " bird " , 2 )) ;))
+(program (command (insertCMD INSERT INTO animals VALUES FROM ( "Tweety" , "bird" , 1 )) ;))
+0
+(program (command (insertCMD INSERT INTO animals VALUES FROM ( "Joe" , "bird" , 2 )) ;))
 0
 (program (command (showCMD SHOW (atomicExpr animals)) ;))
 0
-(program (query dogs <- (expr (selection select ( (condition (conjunction (comparison kind == " dog "))) ) (atomicExpr animals))) ;))
-1
-(program (query old_dogs <- (expr (selection select ( (condition (conjunction (comparison age > 1 0))) ) (atomicExpr dogs))) ;))
-1
-(program (query cats_or_dogs <- (expr (union (atomicExpr dogs) + (atomicExpr ( (expr (selection select ( (condition (conjunction (comparison kind == " cat "))) ) (atomicExpr animals))) )))) ;))
-1
-(program (command (createCMD CREATE TABLE species ( (typedAttributeList kind VARCHAR(10)) ) PRIMARY KEY ( (attributeList kind) )) ;))
+(program (query dogs <- (expr (selection select ( (condition (conjunction (comparison (operand kind) == (operand "dog")))) ) (atomicExpr animals))) ;))
+0
+(program (query old_dogs <- (expr (selection select ( (condition (conjunction (comparison (operand age) > (operand (integer 1 0))))) ) (atomicExpr dogs))) ;))
+0
+(program (query cats_or_dogs <- (expr (union (atomicExpr dogs) + (atomicExpr ( (expr (selection select ( (condition (conjunction (comparison (operand kind) == (operand "cat")))) ) (atomicExpr animals))) )))) ;))
+0
+(program (command (createCMD CREATE TABLE species ( (typedAttributeList kind (type VARCHAR ( 1 0 ))) ) PRIMARY KEY ( (attributeList kind) )) ;))
 0
 (program (command (insertCMD INSERT INTO species VALUES FROM RELATION (expr (projection project ( (attributeList kind) ) (atomicExpr animals)))) ;))
 0
 (program (query a <- (expr (renaming rename ( (attributeList aname , akind) ) (atomicExpr ( (expr (projection project ( (attributeList name , kind) ) (atomicExpr animals))) )))) ;))
 0
-(program (query common_names <- (expr (projection project ( (attributeList name) ) (atomicExpr ( (expr (selection select ( (condition (conjunction (comparison aname == name) && (comparison akind != kind))) ) (atomicExpr ( (expr (product (atomicExpr a) * (atomicExpr animals))) )))) )))) ;))
-2
+(program (query common_names <- (expr (projection project ( (attributeList name) ) (atomicExpr ( (expr (selection select ( (condition (conjunction (comparison (operand aname) == (operand name)) && (comparison (operand akind) != (operand kind)))) ) (atomicExpr ( (expr (product (atomicExpr a) * (atomicExpr animals))) )))) )))) ;))
+0
 (program (query answer <- (expr (atomicExpr common_names)) ;))
 0
 (program (command (showCMD SHOW (atomicExpr answer)) ;))

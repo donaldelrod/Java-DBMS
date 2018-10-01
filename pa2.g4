@@ -128,23 +128,23 @@ OPERATION
 	: '==' | '!=' | '>' | '<' | '<=' | '>=';
 
 LITERAL
-	: '"' ;
+	: '"' IDENTIFIER '"' ;
 	
 IDENTIFIER
 	: ALPHA (ALPHA | DIGIT)* ;
 	
-TYPE
+type
 	: INTEGER | (VARCHAR LPAR DIGIT+ RPAR) ;// | DATET | TIMET | (CHAR LPAR DIGIT+ RPAR) );
 	
 typedAttributeList //TYPEDATTRIBUTELIST
-	: IDENTIFIER TYPE (COMMA IDENTIFIER TYPE)* ;
-	
-OPERAND
-	: DIGIT | IDENTIFIER ;
-		
+	: IDENTIFIER type (COMMA IDENTIFIER type)* ;
+
 integer
-	: DIGIT DIGIT* ; 
+	: DIGIT+ ;
 	
+operand
+	: integer | IDENTIFIER | LITERAL;
+		
 attributeList
 	: IDENTIFIER (COMMA IDENTIFIER)* ;
 	
@@ -173,7 +173,7 @@ conjunction
 	: comparison (DOUBLEAND comparison)* ;
 	
 comparison
-	: OPERAND OPERATION OPERAND | (LPAR condition RPAR);
+	: operand OPERATION operand | (LPAR condition RPAR);
 
 selection
 	: SELECT LPAR condition RPAR atomicExpr ;
@@ -201,7 +201,7 @@ expr
 
  
 insertCMD
-	: (INSERT INTO IDENTIFIER VALUES FROM LPAR  (integer | (LITERAL IDENTIFIER LITERAL)) (COMMA (DIGIT+ | (LITERAL IDENTIFIER LITERAL) ) )*  RPAR)
+	: (INSERT INTO IDENTIFIER VALUES FROM LPAR  (integer | LITERAL) (COMMA (DIGIT+ | LITERAL ) )*  RPAR)
 	| (INSERT INTO IDENTIFIER VALUES FROM RELATION expr) ;
 
 
