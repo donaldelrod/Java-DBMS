@@ -7,6 +7,26 @@ import org.antlr.v4.runtime.tree.ParseTreeListener;
  */
 public interface pa2Listener extends ParseTreeListener {
 	/**
+	 * Enter a parse tree produced by {@link pa2Parser#integer}.
+	 * @param ctx the parse tree
+	 */
+	void enterInteger(pa2Parser.IntegerContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link pa2Parser#integer}.
+	 * @param ctx the parse tree
+	 */
+	void exitInteger(pa2Parser.IntegerContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link pa2Parser#type}.
+	 * @param ctx the parse tree
+	 */
+	void enterType(pa2Parser.TypeContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link pa2Parser#type}.
+	 * @param ctx the parse tree
+	 */
+	void exitType(pa2Parser.TypeContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link pa2Parser#typedAttributeList}.
 	 * @param ctx the parse tree
 	 */
@@ -17,15 +37,15 @@ public interface pa2Listener extends ParseTreeListener {
 	 */
 	void exitTypedAttributeList(pa2Parser.TypedAttributeListContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link pa2Parser#integer}.
+	 * Enter a parse tree produced by {@link pa2Parser#operand}.
 	 * @param ctx the parse tree
 	 */
-	void enterInteger(pa2Parser.IntegerContext ctx);
+	void enterOperand(pa2Parser.OperandContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link pa2Parser#integer}.
+	 * Exit a parse tree produced by {@link pa2Parser#operand}.
 	 * @param ctx the parse tree
 	 */
-	void exitInteger(pa2Parser.IntegerContext ctx);
+	void exitOperand(pa2Parser.OperandContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link pa2Parser#attributeList}.
 	 * @param ctx the parse tree

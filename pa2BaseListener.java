@@ -15,6 +15,30 @@ public class pa2BaseListener implements pa2Listener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterInteger(pa2Parser.IntegerContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitInteger(pa2Parser.IntegerContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterType(pa2Parser.TypeContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitType(pa2Parser.TypeContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterTypedAttributeList(pa2Parser.TypedAttributeListContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -27,13 +51,13 @@ public class pa2BaseListener implements pa2Listener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterInteger(pa2Parser.IntegerContext ctx) { }
+	@Override public void enterOperand(pa2Parser.OperandContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitInteger(pa2Parser.IntegerContext ctx) { }
+	@Override public void exitOperand(pa2Parser.OperandContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
